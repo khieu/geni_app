@@ -35,7 +35,7 @@ class App extends React.Component{
     console.log(texts);
     let items = texts.map((item, index) => 
     <li key={index}>
-      <Card className={item[0] == 0 ? 'User-text' : 'Bot-text'}>{item[1]} </Card>
+      <Card className={item[0] == 0 ? 'User-text Message-box' : 'Bot-text Message-box'}>{item[1]} </Card>
     
     </li>)
 

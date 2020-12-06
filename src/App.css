@@ -27,9 +27,40 @@
 .textBox {
   height: calc(100vh - 110px);
   background-color: aquamarine;
+  padding: 5px 5px 5px 5px;
 
 }
 
 .Text-field {
   width: calc(100vw - 120px);
+}
+
+ul {
+  list-style-type: none;
+  padding: 0px 10px 5px 10px
+}
+
+li {
+  margin-top: 5px;
+  width: 100%;
+  display:inline-block;
+}
+
+.User-text{
+  float: right;
+  width: fit-content;
+  background-color: #3f51b5 !important;
+  color: #ffffff !important;
+  max-width: calc(0.45*100vw);
+}
+.Bot-text {
+  float: right;
+  width: fit-content;
+  background-color: #3e4042 !important;
+  color: #e4e6eb !important;
+  max-width: calc(0.45*100vw);
+}
+
+.Message-box {
+  padding: 3px 5px 3px 5px;
 }
