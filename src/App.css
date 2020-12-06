@@ -25,14 +25,15 @@
 }
 
 .textBox {
-  height: calc(100vh - 110px);
-  background-color: aquamarine;
+  height: calc(100vh - 120px);
   padding: 5px 5px 5px 5px;
+  overflow: auto;
 
 }
 
 .Text-field {
   width: calc(100vw - 120px);
+  /* background-color: #f2f2f2; */
 }
 
 ul {
@@ -54,7 +55,7 @@ li {
   max-width: calc(0.45*100vw);
 }
 .Bot-text {
-  float: right;
+  float: left;
   width: fit-content;
   background-color: #3e4042 !important;
   color: #e4e6eb !important;
@@ -63,4 +64,5 @@ li {
 
 .Message-box {
   padding: 3px 5px 3px 5px;
+  text-align: left;
 }

@@ -11,9 +11,14 @@ class App extends React.Component{
 
   constructor(props) {
     super(props);
-    this.state = {userInputs: [], inputValue: "", count: 0};
+    this.state = {
+      userInputs: [],
+      inputValue: "",
+      count: 0
+    };
     this.keyPress = this.keyPress.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
+    this.handleSendButtonClick = this.handleSendButtonClick.bind(this);
   }
 
   keyPress(e){
@@ -31,11 +36,12 @@ class App extends React.Component{
       inputValue: e.target.value
     });
   }
+
   displayText(texts){
     console.log(texts);
     let items = texts.map((item, index) => 
     <li key={index}>
-      <Card className={item[0] == 0 ? 'User-text Message-box' : 'Bot-text Message-box'}>{item[1]} </Card>
+      <Card className={item[0] == 1 ? 'User-text Message-box' : 'Bot-text Message-box'}>{item[1]} </Card>
     
     </li>)
 
@@ -43,6 +49,27 @@ class App extends React.Component{
       <ul>{items}</ul>
     )
   }
+
+  handleSendButtonClick() {
+    let updatedCount = this.state.count + 1;
+    let updatedInputs = [...this.state.userInputs];
+    let msg = this.state.inputValue;
+    updatedInputs.push([updatedCount % 2, msg]);
+    this.setState({userInputs: updatedInputs, inputValue: "", count: updatedCount});
+  }
+
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  }
+  
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+  
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
   render(){  
     console.log('inputs: ', this.state.userInputs)
     return (
@@ -52,7 +79,12 @@ class App extends React.Component{
             GENI CHATBOT
           </label>
         </header>
-        <div className='textBox'>{this.displayText(this.state.userInputs)}</div>
+        <div className='textBox'>
+          {this.displayText(this.state.userInputs)}
+          <div style={{ float:"left", clear: "both" }}
+             ref={(el) => { this.messagesEnd = el; }}>
+          </div>
+        </div>
         <div className='Input-area'>
           <TextField 
             id="standard-basic"
@@ -61,8 +93,9 @@ class App extends React.Component{
             onKeyDown={this.keyPress}
             value={this.state.inputValue}
             onChange={this.handleOnChange}
+            variant='filled'
           />
-          <Button variant="contained" color="primary" className="Send-button">
+          <Button variant="contained" color="primary" className="Send-button" onClick={this.handleSendButtonClick}>
             Send
           </Button>
         </div>
