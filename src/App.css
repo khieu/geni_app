@@ -9,7 +9,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 30px;/*calc(10px + 2vmin);*/
+  font-size: 30px;
   color: white;
 }
 
@@ -22,18 +22,21 @@
   flex-direction: row;
   justify-content: space-between;
   padding: 5px 10px 5px 10px;
+  align-items: flex-end;
+  position: fixed;
+  bottom: 0px;
+  width: calc(100vw - 20px);
 }
 
 .textBox {
-  height: calc(100vh - 120px);
+  max-height: calc(100vh - 130px);
   padding: 5px 5px 5px 5px;
   overflow: auto;
 
 }
 
 .Text-field {
-  width: calc(100vw - 120px);
-  /* background-color: #f2f2f2; */
+  width: calc(100vw - 147.5px);
 }
 
 ul {
@@ -65,4 +68,8 @@ li {
 .Message-box {
   padding: 3px 5px 3px 5px;
   text-align: left;
+}
+
+.Send-button {
+  width: 100px;
 }

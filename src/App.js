@@ -16,12 +16,12 @@ class App extends React.Component{
       inputValue: "",
       count: 0
     };
-    this.keyPress = this.keyPress.bind(this);
-    this.handleOnChange = this.handleOnChange.bind(this);
-    this.handleSendButtonClick = this.handleSendButtonClick.bind(this);
+    // this.keyPress = this.keyPress.bind(this);
+    // this.handleOnChange = this.handleOnChange.bind(this);
+    // this.handleSendButtonClick = this.handleSendButtonClick.bind(this);
   }
 
-  keyPress(e){
+  keyPress = (e) => {
     if(e.keyCode == 13){
        console.log('value', e.target.value);
        let updatedCount = this.state.count + 1;
@@ -31,7 +31,7 @@ class App extends React.Component{
     }
   }
 
-  handleOnChange(e) {
+  handleOnChange = (e) => {
     this.setState({
       inputValue: e.target.value
     });
@@ -50,7 +50,7 @@ class App extends React.Component{
     )
   }
 
-  handleSendButtonClick() {
+  handleSendButtonClick = () => {
     let updatedCount = this.state.count + 1;
     let updatedInputs = [...this.state.userInputs];
     let msg = this.state.inputValue;
@@ -87,7 +87,9 @@ class App extends React.Component{
         </div>
         <div className='Input-area'>
           <TextField 
-            id="standard-basic"
+            id="filled-basic"
+            // multiline
+            // rowsMax={2}
             label="Type a message..."
             className="Text-field"
             onKeyDown={this.keyPress}
