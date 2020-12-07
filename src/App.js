@@ -2,32 +2,31 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
+import axios from 'axios';
 
 import './App.css';
 
-
+let USER_MESSAGE = 1;
+let CHATBOT_MESSAGE = 0;
+let ENDPOINT = `http://127.0.0.1:5000/message`;
 
 class App extends React.Component{
 
   constructor(props) {
     super(props);
     this.state = {
-      userInputs: [],
+      messages: [[CHATBOT_MESSAGE, "Hello, I am GENI Bot, a chat bot. I will talk to you to day!"]],
       inputValue: "",
-      count: 0
     };
-    // this.keyPress = this.keyPress.bind(this);
-    // this.handleOnChange = this.handleOnChange.bind(this);
-    // this.handleSendButtonClick = this.handleSendButtonClick.bind(this);
   }
 
   keyPress = (e) => {
     if(e.keyCode == 13){
-       console.log('value', e.target.value);
-       let updatedCount = this.state.count + 1;
-       let updatedInputs = [...this.state.userInputs];
-       updatedInputs.push([updatedCount % 2, e.target.value]);
-       this.setState({userInputs: updatedInputs, inputValue: "", count: updatedCount});
+       let updatedInputs = [...this.state.messages];
+       updatedInputs.push([USER_MESSAGE, e.target.value]);
+       this.setState({messages: updatedInputs, inputValue: ""});
+       this.requestChatBot(e.target.value);
+       console.log('user_input: ', e.target.value);
     }
   }
 
@@ -38,24 +37,39 @@ class App extends React.Component{
   }
 
   displayText(texts){
-    console.log(texts);
     let items = texts.map((item, index) => 
     <li key={index}>
-      <Card className={item[0] == 1 ? 'User-text Message-box' : 'Bot-text Message-box'}>{item[1]} </Card>
+      <Card className={item[0] == USER_MESSAGE ? 'User-text Message-box' : 'Bot-text Message-box'}>{item[1]} </Card>
     
     </li>)
-
     return (
       <ul>{items}</ul>
     )
   }
 
   handleSendButtonClick = () => {
-    let updatedCount = this.state.count + 1;
-    let updatedInputs = [...this.state.userInputs];
+    let updatedInputs = [...this.state.messages];
     let msg = this.state.inputValue;
-    updatedInputs.push([updatedCount % 2, msg]);
-    this.setState({userInputs: updatedInputs, inputValue: "", count: updatedCount});
+    console.log('user_input: ', msg);
+    updatedInputs.push([USER_MESSAGE, msg]);
+    this.setState({messages: updatedInputs, inputValue: ""});
+    this.requestChatBot(msg);
+  }
+
+  requestChatBot = (message) => {
+    axios.post(
+      ENDPOINT,
+      {"text": message}
+    ).then(res => {
+      console.log('bot response: ', res.data);
+      let response = res.data.text;
+      let updatedInputs = [...this.state.messages];
+      updatedInputs.push([CHATBOT_MESSAGE, response]);
+      this.setState({messages: updatedInputs, inputValue: ""});
+    }).catch(function (error) {
+      console.error(error);
+    })
+    
   }
 
   scrollToBottom = () => {
@@ -71,7 +85,6 @@ class App extends React.Component{
   }
 
   render(){  
-    console.log('inputs: ', this.state.userInputs)
     return (
       <div className="App">
         <header className="App-header">
@@ -80,7 +93,7 @@ class App extends React.Component{
           </label>
         </header>
         <div className='textBox'>
-          {this.displayText(this.state.userInputs)}
+          {this.displayText(this.state.messages)}
           <div style={{ float:"left", clear: "both" }}
              ref={(el) => { this.messagesEnd = el; }}>
           </div>
