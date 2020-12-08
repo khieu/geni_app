@@ -8,7 +8,7 @@ import './App.css';
 
 let USER_MESSAGE = 1;
 let CHATBOT_MESSAGE = 0;
-let ENDPOINT = `http://127.0.0.1:5000/message`;
+let ENDPOINT = `http://server:5000/message`;
 
 class App extends React.Component{
 
