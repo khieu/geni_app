@@ -1,0 +1,8 @@
+git clone https://github.com/khieu/geni_app.git
+cd geni_app
+sudo apt install npm
+sudo npm install npm -g
+sudo chown -R 20002:2144 "/users/trungvd/.npm"
+sudo npm install n -g
+sudo n stable
+npm install
