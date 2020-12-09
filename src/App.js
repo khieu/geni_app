@@ -3,12 +3,15 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import axios from 'axios';
+import io from 'socket.io-client';
 
 import './App.css';
 
+let USE_SOCKET = true;
 let USER_MESSAGE = 1;
 let CHATBOT_MESSAGE = 0;
 let ENDPOINT = `http://server:5000/message`;
+let SOCKET_ENDPOINT = '127.0.0.1:5001'
 
 class App extends React.Component{
 
@@ -57,18 +60,29 @@ class App extends React.Component{
   }
 
   requestChatBot = (message) => {
-    axios.post(
-      ENDPOINT,
-      {"text": message}
-    ).then(res => {
-      console.log('bot response: ', res.data);
-      let response = res.data.text;
-      let updatedInputs = [...this.state.messages];
-      updatedInputs.push([CHATBOT_MESSAGE, response]);
-      this.setState({messages: updatedInputs, inputValue: ""});
-    }).catch(function (error) {
-      console.error(error);
-    })
+    
+    if (USE_SOCKET == true) { 
+      this.socket.emit("message", {'data':message})
+      this.socket.on('response', (response) => {
+        console.log(response);
+        let updatedInputs = [...this.state.messages];
+        updatedInputs.push([CHATBOT_MESSAGE, response]);
+        this.setState({messages: updatedInputs, inputValue: ""});
+      })
+    } else {
+      axios.post(
+        ENDPOINT,
+        {"text": message}
+      ).then(res => {
+        console.log('bot response: ', res.data);
+        let response = res.data.text;
+        let updatedInputs = [...this.state.messages];
+        updatedInputs.push([CHATBOT_MESSAGE, response]);
+        this.setState({messages: updatedInputs, inputValue: ""});
+      }).catch(function (error) {
+        console.error(error);
+      })
+    }
     
   }
 
@@ -78,6 +92,12 @@ class App extends React.Component{
   
   componentDidMount() {
     this.scrollToBottom();
+    if (USE_SOCKET == true) {
+      this.socket = io(SOCKET_ENDPOINT);
+      this.socket.on("responseMessage", message => {
+        console.log("responseMessage", message)
+      })
+    }
   }
   
   componentDidUpdate() {
