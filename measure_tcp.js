@@ -29,7 +29,7 @@ const send_req = (i) => {
         }
         if (rtts.length == num_trial) {
             let sum = rtts.reduce((a,b)=> a+b,0);
-            console.log('average RTT', sum/rtts.length);
+            console.log('average RTT ', sum/rtts.length, 'ms');
         }
     }).catch((error) => {
         console.log(error)

@@ -30,7 +30,7 @@ async function experiment() {
         await new Promise(r => setTimeout(r, delay));        
     }
     await new Promise(r => setTimeout(r, 3000));
-    console.log('average rrt of ', rtts.length, ' trials= ', rtts.reduce((a,b)=> a+b,0)/rtts.length);
+    console.log('average rrt of ', rtts.length, ' trials = ', rtts.reduce((a,b)=> a+b,0)/rtts.length, 'ms');
     socket.disconnect();
 }
 
