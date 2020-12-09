@@ -11,4 +11,4 @@ while True:
     message = server.recv(2048)
     print(message)
             
-server.close()  
+server.close()

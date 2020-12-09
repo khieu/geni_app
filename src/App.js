@@ -1,5 +1,5 @@
 import React from 'react';
-import { RadioGroup, Radio, Button, TextField, FormControlLabel, Grid, Box, Paper } from '@material-ui/core';
+import { RadioGroup, Radio, Button, TextField, FormControlLabel, Grid, Box, Paper, Chip } from '@material-ui/core';
 
 import Card from '@material-ui/core/Card';
 import axios from 'axios';
@@ -7,15 +7,13 @@ import io from 'socket.io-client';
 
 import './App.css';
 
-let USE_SOCKET = true;
 let USER_MESSAGE = 1;
 let CHATBOT_MESSAGE = 0;
-<<<<<<< Updated upstream
-let ENDPOINT = `http://server:5000/message`;
-=======
 let ENDPOINT = `http://127.0.0.1:5000/message`;
->>>>>>> Stashed changes
 let SOCKET_ENDPOINT = '127.0.0.1:5001'
+
+const REST_API_TAG = "REST"
+const WEBSOCKET_TAG = "SOCK"
 
 class App extends React.Component{
   constructor(props) {
@@ -29,12 +27,8 @@ class App extends React.Component{
   }
 
   keyPress = (e) => {
-    if(e.keyCode == 13){
-       let updatedInputs = [...this.state.messages];
-       updatedInputs.push([USER_MESSAGE, e.target.value]);
-       this.setState({messages: updatedInputs, inputValue: ""});
-       this.requestChatBot(e.target.value);
-       console.log('user_input: ', e.target.value);
+    if(e.keyCode == 13) {
+       this.handleSendButtonClick();
     }
   }
 
@@ -60,71 +54,43 @@ class App extends React.Component{
     updatedInputs.push([USER_MESSAGE, msg]);
     this.setState({messages: updatedInputs, inputValue: ""});
     if (this.state.protocol == 'rest') {
-      this.getResponse_WebSocket(msg);
-    } else {
       this.getResponse_REST_API(msg);
+    } else {
+      this.getResponse_WebSocket(msg);
     }
   }
 
-  writeLog = (msg) => {
+  writeLog = (text, tag) => {
     this.setState({
       logs: [
         ...this.state.logs,
-        msg
+        { text, tag }
       ]
     })
   }
 
-<<<<<<< Updated upstream
-  requestChatBot = (message) => {
-    
-    if (USE_SOCKET == true) { 
-      this.socket.emit("message", {'data':message})
-=======
   getResponse_REST_API = (message) => {
-    this.writeLog("Send POST request")
+    this.writeLog("Message sent", REST_API_TAG)
+    const time_start = Date.now();
     axios.post(
       ENDPOINT,
-      {"text": message}
+      { text: message, time: time_start }
     ).then(res => {
-      console.log('bot response: ', res.data);
       let response = res.data.text;
       let updatedInputs = [...this.state.messages];
       updatedInputs.push([CHATBOT_MESSAGE, response]);
       this.setState({messages: updatedInputs, inputValue: ""});
-      this.writeLog("Response received")
-    }).catch(function (error) {
-      console.error(error);
+
+      const time_end = new Date()
+      this.writeLog(`Response received in ${(time_end - time_start) / 1000}s (${res.data})`, REST_API_TAG)
+    }).catch((error) => {
+      this.writeLog(`ERROR in receving response`, REST_API_TAG)
     })
   }
 
   getResponse_WebSocket = (message) => {
-    this.socket.emit("message", {'data':message})
->>>>>>> Stashed changes
-      this.socket.on('response', (response) => {
-        console.log(response);
-        let updatedInputs = [...this.state.messages];
-        updatedInputs.push([CHATBOT_MESSAGE, response]);
-        this.setState({messages: updatedInputs, inputValue: ""});
-      })
-<<<<<<< Updated upstream
-    } else {
-      axios.post(
-        ENDPOINT,
-        {"text": message}
-      ).then(res => {
-        console.log('bot response: ', res.data);
-        let response = res.data.text;
-        let updatedInputs = [...this.state.messages];
-        updatedInputs.push([CHATBOT_MESSAGE, response]);
-        this.setState({messages: updatedInputs, inputValue: ""});
-      }).catch(function (error) {
-        console.error(error);
-      })
-    }
-    
-=======
->>>>>>> Stashed changes
+    this.writeLog(`Message sent: "${message}"`, WEBSOCKET_TAG);
+    this.socket.emit("message", { text: message, time: Date.now() });
   }
 
   scrollToBottom = () => {
@@ -133,19 +99,6 @@ class App extends React.Component{
   
   componentDidMount() {
     this.scrollToBottom();
-<<<<<<< Updated upstream
-    if (USE_SOCKET == true) {
-      this.socket = io(SOCKET_ENDPOINT);
-      this.socket.on("responseMessage", message => {
-        console.log("responseMessage", message)
-      })
-    }
-=======
-    this.socket = io(SOCKET_ENDPOINT);
-    this.socket.on("responseMessage", message => {
-      this.writeLog("responseMessage: " + message)
-    })
->>>>>>> Stashed changes
   }
   
   componentDidUpdate() {
@@ -156,11 +109,35 @@ class App extends React.Component{
     this.setState({
       protocol: e.target.value
     })
-    this.writeLog("Protocol changed to " + (e.target.value == 'rest' ? "REST API" : "WebSocket"))
+
+    if (e.target.value == 'sock') {
+      if (this.socket) {
+        this.socket.disconnect()
+      }
+      this.socket = io(SOCKET_ENDPOINT);
+      console.log(this.socket)
+      this.socket.on("connected", message => {
+        this.writeLog(`WebSocket connection established`, WEBSOCKET_TAG)
+      })
+      this.socket.on('response', (res) => {
+        this.writeLog(`Message received in ${(Date.now() - res.sent_time) / 1000}s: "${res.text}"`, WEBSOCKET_TAG)
+        let updatedInputs = [...this.state.messages];
+        updatedInputs.push([CHATBOT_MESSAGE, res.text]);
+        this.setState({messages: updatedInputs, inputValue: ""});
+      })
+    }
+
+    this.writeLog("Protocol switched to " + (e.target.value == 'rest' ? "REST API" : "WebSocket"), '')
   }
 
   render() {
-    const logItems = this.state.logs.map((text) => <li>{text}</li>)
+    const logItems = this.state.logs.map((log) => {
+      const chip = log.tag ? <Chip size="small" label={log.tag} /> : '';
+      return (<li class='log-item'>
+        {chip}
+        {" " + log.text}
+      </li>)
+    })
 
     return (
       <div className="App">
@@ -170,7 +147,7 @@ class App extends React.Component{
           </label>
         </header>
         <Grid container>
-          <Grid item md={6} borderRight={1}>
+          <Grid item md={6}>
             <Grid container>
               <Grid item md={12}>
                 <Paper className='textBox' variant="outlined">

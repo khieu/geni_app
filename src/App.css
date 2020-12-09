@@ -74,3 +74,9 @@ li {
 .Send-button {
   width: 100px;
 }
+
+.log-item {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 10pt;
+  text-align: left;
+}
