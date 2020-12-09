@@ -63,12 +63,6 @@ class App extends React.Component{
     
     if (USE_SOCKET == true) { 
       this.socket.emit("message", {'data':message})
-      this.socket.on('response', (response) => {
-        console.log(response);
-        let updatedInputs = [...this.state.messages];
-        updatedInputs.push([CHATBOT_MESSAGE, response]);
-        this.setState({messages: updatedInputs, inputValue: ""});
-      })
     } else {
       axios.post(
         ENDPOINT,
@@ -96,6 +90,12 @@ class App extends React.Component{
       this.socket = io(SOCKET_ENDPOINT);
       this.socket.on("responseMessage", message => {
         console.log("responseMessage", message)
+      })
+      this.socket.on('response', (response) => {
+        console.log(response);
+        let updatedInputs = [...this.state.messages];
+        updatedInputs.push([CHATBOT_MESSAGE, response]);
+        this.setState({messages: updatedInputs, inputValue: ""});
       })
     }
   }
