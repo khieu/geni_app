@@ -82,7 +82,7 @@ class App extends React.Component{
       this.setState({messages: updatedInputs, inputValue: ""});
 
       const time_end = new Date()
-      this.writeLog(`Response received in ${(time_end - time_start) / 1000}s (${res.data})`, REST_API_TAG)
+      this.writeLog(`Response received in ${(time_end - time_start) / 1000}s (${res.data.text})`, REST_API_TAG)
     }).catch((error) => {
       this.writeLog(`ERROR in receving response`, REST_API_TAG)
     })
