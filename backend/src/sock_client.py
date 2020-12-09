@@ -3,7 +3,7 @@ import select
 import sys  
   
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
-server.connect(('127.0.0.1', 5001))  
+server.connect(('0.0.0.0', 5000))  
   
 while True:
     message = input('> ')

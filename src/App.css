@@ -24,19 +24,14 @@
   padding: 5px 10px 5px 10px;
   align-items: flex-end;
   position: fixed;
-  bottom: 0px;
+  bottom: 20px;
   width: calc(100vw - 20px);
 }
 
 .textBox {
-  max-height: calc(100vh - 130px);
+  height: calc(100vh - 200px);
   padding: 5px 5px 5px 5px;
   overflow: auto;
-
-}
-
-.Text-field {
-  width: calc(100vw - 147.5px);
 }
 
 ul {
@@ -50,13 +45,14 @@ li {
   display:inline-block;
 }
 
-.User-text{
+.User-text {
   float: right;
   width: fit-content;
   background-color: #3f51b5 !important;
   color: #ffffff !important;
   max-width: calc(0.45*100vw);
 }
+
 .Bot-text {
   float: left;
   width: fit-content;
@@ -68,6 +64,11 @@ li {
 .Message-box {
   padding: 3px 5px 3px 5px;
   text-align: left;
+  padding: 10px;
+}
+
+.Text-field {
+  width: calc(100% - 147.5px);
 }
 
 .Send-button {

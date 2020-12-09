@@ -35,6 +35,7 @@ def handle_message(message):
     print('sending response', message_to_send)
     emit('response', message_to_send)
 
+<<<<<<< Updated upstream
 if __name__ == '__main__':
     # socketio.run(app, host='127.0.0.1', port=5001)
     http_server = WSGIServer(('127.0.0.1',5001), app, handler_class=WebSocketHandler)
@@ -46,6 +47,10 @@ if __name__ == '__main__':
 
 # server.bind(("127.0.0.1", 5001))  
 # server.listen(100)  
+=======
+server.bind(("0.0.0.0", 5001))  
+server.listen(100)  
+>>>>>>> Stashed changes
   
 # list_of_clients = []  
   
