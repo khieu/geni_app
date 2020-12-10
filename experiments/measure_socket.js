@@ -1,37 +1,55 @@
-var crypto = require('crypto');
+const crypto = require('crypto');
 const io = require('socket.io-client');
+const { program } = require('commander');
+const { resolveSoa } = require('dns');
+const fs = require('fs');
 
 let SOCKET_ENDPOINT = 'ws://127.0.0.1:5001';
 
 console.log('before', SOCKET_ENDPOINT);
 socket = io.connect(SOCKET_ENDPOINT);
-let num_trial = parseInt(process.argv[2]);
-let msg_size = parseInt(process.argv[3]);
-let delay = 100;
+
+program
+  .option('--num_trials <number>', 'number of trials', 10)
+  .option('--msg_size <number>', 'size of messages', 10)
+  .option('--delay <number>', 'delay in ms', 3000);
+program.parse(process.argv);
+
+let num_trial = parseInt(program.num_trials);
+let msg_size = parseInt(program.msg_size);
 
 rtts = []
+promisses = []
+time_sent_to_idx = {}
+num_received = 0
 
 socket.on("connected", message => {
     console.log(`WebSocket connection established`)
-    })
-socket.on('response', (res) => {
-    console.log(`Message received in ${(Date.now() - res.sent_time) / 1000}s: "${res.text}"`)
-    rtts.push(Date.now() - res.sent_time)
+    for (let i = 0; i < num_trial; i++) {
+        promisses.push(new Promise((resolve) => send_req(i, resolve)));
+    }
+    Promise.all(promisses).then(() => {});
 })
 
-const send_req = (i) => {
-    let message = crypto.randomBytes(msg_size).toString('hex');
-    socket.emit("message", { text: message, time: Date.now() });
-}
-async function experiment() {
-    var i
-    for(i = 0; i < num_trial; i++) {
-        send_req(i);
-        await new Promise(r => setTimeout(r, delay));        
+socket.on('response', (res) => {
+    // console.log(`Message received in ${(Date.now() - res.sent_time) / 1000}s: "${res.text}"`)
+    const rtt = Date.now() - res.sent_time;
+    rtts.push(rtt)
+    num_received++;
+    console.log(`Response for message sent at ${res.sent_time} received in ${rtt}`)
+    if (rtts.length == num_trial) {
+        let sum = rtts.reduce((a,b)=> a+b,0);
+        console.log('average RTT ', sum / rtts.length, 'ms');
+        fs.appendFileSync('outputs_sock.txt', `${num_trial},${msg_size},${sum / num_trial}\n`);
+        process.exit()
     }
-    await new Promise(r => setTimeout(r, 3000));
-    console.log('average rrt of ', rtts.length, ' trials = ', rtts.reduce((a,b)=> a+b,0)/rtts.length, 'ms');
-    socket.disconnect();
-}
+})
 
-experiment()
+const send_req = (i, resolve) => {
+    time_sent = Date.now()
+    setTimeout(() => {
+        let message = crypto.randomBytes(msg_size).toString('hex');
+        socket.emit("message", { text: message, time: time_sent });
+        console.log(`Message ${i + 1} sent`)
+    }, program.delay * i);
+}

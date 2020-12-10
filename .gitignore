@@ -24,3 +24,4 @@ yarn-error.log*
 
 *.pyc
 .eslintcache
+outputs_*.txt
