@@ -1,11 +1,11 @@
 from flask import Flask, jsonify
 from flask_socketio import SocketIO, send, emit
 from flask_cors import CORS, cross_origin
+import argparse
+from chatbot import init
 
 from gevent.pywsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
-
-from chatbot import get_response
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -30,6 +30,12 @@ def handle_message(message):
     emit('response', {'text': message_to_send, 'sent_time': message['time']})
 
 if __name__ == '__main__':
-    print("Done.")
-    http_server = WSGIServer(('127.0.0.1', 5001), app, handler_class=WebSocketHandler)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--engine', type=str, default='chatterbot', help='chatterbot or chatbotrnn')
+    parser.add_argument('--host', type=str, default='127.0.0.1', help='host name for web server')
+    parser.add_argument('--port', type=int, default=5000, help='port number for web server')
+    args = parser.parse_args()
+    get_response = init(args.engine)
+    http_server = WSGIServer((args.host, args.port), app, handler_class=WebSocketHandler)
+    print("WebSocket launched.")
     http_server.serve_forever()
