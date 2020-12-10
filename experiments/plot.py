@@ -1,9 +1,12 @@
 import matplotlib.pyplot as plt
 
+msg_size = 10
+delay = 100
+
 num_trials = []
 rtts = []
 fig, ax = plt.subplots()
-fn = 'rest_ms_10_d_100'
+fn = f'rest_ms_{msg_size}_d_{delay}'
 with open(f'outputs/{fn}.txt') as f:
     lines = f.read().split('\n')
     for l in lines:
@@ -13,7 +16,7 @@ with open(f'outputs/{fn}.txt') as f:
         sorted(zip(num_trials, rtts))
 ax.plot(num_trials, rtts, label='REST API')
 ax.plot(num_trials, rtts, label='WebSocket')
-ax.set_title('REST API vs WebSocket (message size: 10)')
+ax.set_title(f'REST API vs WebSocket (message size: {msg_size}, delay: {delay})')
 ax.set_xlabel('number of requests')
 ax.set_ylabel('rtt (s)')
 ax.legend()

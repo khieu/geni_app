@@ -24,9 +24,12 @@ rtts = []
 promisses = []
 time_sent_to_idx = {}
 num_received = 0
+ran = False
 
 socket.on("connected", message => {
     console.log(`WebSocket connection established`)
+    if (ran) return;
+    ran = True;
     for (let i = 0; i < num_trial; i++) {
         promisses.push(new Promise((resolve) => send_req(i, resolve)));
     }
