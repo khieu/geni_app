@@ -8,6 +8,11 @@
 
 ## REST API Server
 
+```
+cd backend
+python3 src/api.py --host 0.0.0.0 --port 5000 --engine chatterbot
+```
+
 ## WebSocket Server
 
 ```

@@ -48,8 +48,8 @@ socket.on('response', (res) => {
 })
 
 const send_req = (i, resolve) => {
-    time_sent = Date.now()
     setTimeout(() => {
+        time_sent = Date.now()
         let message = crypto.randomBytes(msg_size).toString('hex');
         socket.emit("message", { text: message, time: time_sent });
         console.log(`Message ${i + 1} sent`)
