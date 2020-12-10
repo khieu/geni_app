@@ -1,0 +1,44 @@
+<rspec xmlns="http://www.geni.net/resources/rspec/3" xmlns:emulab="http://www.protogeni.net/resources/rspec/ext/emulab/1" xmlns:tour="http://www.protogeni.net/resources/rspec/ext/apt-tour/1" xmlns:jacks="http://www.protogeni.net/resources/rspec/ext/jacks/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geni.net/resources/rspec/3    http://www.geni.net/resources/rspec/3/request.xsd" type="request">
+  <node xmlns:emulab="http://www.protogeni.net/resources/rspec/ext/emulab/1" client_id="server" component_manager_id="urn:publicid:IDN+geni.it.cornell.edu+authority+cm" component_id="urn:publicid:IDN+geni.it.cornell.edu+node+pc3" sliver_id="urn:publicid:IDN+geni.it.cornell.edu+sliver+57751" exclusive="false">
+    <icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+    <sliver_type name="default-vm"/>
+    <services>
+      <emulab:imageable available="true"/>
+      <login authentication="ssh-keys" hostname="pc3.geni.it.cornell.edu" port="25211" username="tolik"/>
+      <login authentication="ssh-keys" hostname="pc3.geni.it.cornell.edu" port="25211" username="trungvd"/>
+      <login authentication="ssh-keys" hostname="pc3.geni.it.cornell.edu" port="25211" username="matta"/>
+      <login authentication="ssh-keys" hostname="pc3.geni.it.cornell.edu" port="25211" username="hle"/>
+      <emulab:console server="vhost3.shared-nodes.emulab-ops.geni.it.cornell.edu"/>
+    </services>
+    <interface client_id="interface-1" component_id="urn:publicid:IDN+geni.it.cornell.edu+interface+pc3:lo0" sliver_id="urn:publicid:IDN+geni.it.cornell.edu+sliver+57755" mac_address="029195e0a104">
+      <ip address="10.10.1.2" type="ipv4" netmask="255.255.255.0"/>
+    </interface>
+    <emulab:vnode name="pcvm3-6" hardware_type="pcvm"/>
+    <host name="server.geni-app-chatbot.ch-geni-net.geni.it.cornell.edu"/>
+  </node>
+  <node xmlns:emulab="http://www.protogeni.net/resources/rspec/ext/emulab/1" client_id="client" component_manager_id="urn:publicid:IDN+geni.it.cornell.edu+authority+cm" component_id="urn:publicid:IDN+geni.it.cornell.edu+node+pc3" sliver_id="urn:publicid:IDN+geni.it.cornell.edu+sliver+57750" exclusive="false">
+    <icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+    <sliver_type name="default-vm"/>
+    <services>
+      <emulab:imageable available="true"/>
+      <login authentication="ssh-keys" hostname="pc3.geni.it.cornell.edu" port="25210" username="tolik"/>
+      <login authentication="ssh-keys" hostname="pc3.geni.it.cornell.edu" port="25210" username="trungvd"/>
+      <login authentication="ssh-keys" hostname="pc3.geni.it.cornell.edu" port="25210" username="matta"/>
+      <login authentication="ssh-keys" hostname="pc3.geni.it.cornell.edu" port="25210" username="hle"/>
+      <emulab:console server="vhost3.shared-nodes.emulab-ops.geni.it.cornell.edu"/>
+    </services>
+    <interface client_id="interface-0" component_id="urn:publicid:IDN+geni.it.cornell.edu+interface+pc3:lo0" sliver_id="urn:publicid:IDN+geni.it.cornell.edu+sliver+57754" mac_address="028feef14fc2">
+      <ip address="10.10.1.1" type="ipv4" netmask="255.255.255.0"/>
+    </interface>
+    <emulab:vnode name="pcvm3-1" hardware_type="pcvm"/>
+    <host name="client.geni-app-chatbot.ch-geni-net.geni.it.cornell.edu"/>
+  </node>
+  <link client_id="link-0" sliver_id="urn:publicid:IDN+geni.it.cornell.edu+sliver+57753">
+    <interface_ref client_id="interface-0" component_id="urn:publicid:IDN+geni.it.cornell.edu+interface+pc3:lo0" sliver_id="urn:publicid:IDN+geni.it.cornell.edu+sliver+57754"/>
+    <interface_ref client_id="interface-1" component_id="urn:publicid:IDN+geni.it.cornell.edu+interface+pc3:lo0" sliver_id="urn:publicid:IDN+geni.it.cornell.edu+sliver+57755"/>
+    <component_manager name="urn:publicid:IDN+geni.it.cornell.edu+authority+cm"/>
+  </link>
+  <rs:site_info xmlns:rs="http://www.protogeni.net/resources/rspec/ext/site-info/1">
+    <rs:location country="" latitude="42.453877" longitude="-76.484370"/>
+  </rs:site_info>
+</rspec>
