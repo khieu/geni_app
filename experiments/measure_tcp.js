@@ -7,13 +7,15 @@ const fs = require('fs');
 // ## commandline argument: number of trial and message size ##
 // ############################################################
 
-let ENDPOINT = `http://127.0.0.1:5000/message`;
-
 program
+  .option('--host <type>', 'host name', '127.0.0.1')
+  .option('--port <number>', 'port number', 5000)
   .option('--num_trials <number>', 'number of trials', 10)
   .option('--msg_size <number>', 'size of messages', 10)
   .option('--delay <number>', 'delay in ms', 3000);
 program.parse(process.argv);
+
+let ENDPOINT = `http://${program.host}:${program.port}/message`;
 
 let num_trial = parseInt(program.num_trials);
 let msg_size = parseInt(program.msg_size);

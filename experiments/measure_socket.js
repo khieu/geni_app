@@ -4,16 +4,18 @@ const { program } = require('commander');
 const { resolveSoa } = require('dns');
 const fs = require('fs');
 
-let SOCKET_ENDPOINT = 'ws://127.0.0.1:5001';
-
-console.log('before', SOCKET_ENDPOINT);
-socket = io.connect(SOCKET_ENDPOINT);
-
 program
+  .option('--host <type>', 'host name', '127.0.0.1')
+  .option('--port <number>', 'port number', 5001)
   .option('--num_trials <number>', 'number of trials', 10)
   .option('--msg_size <number>', 'size of messages', 10)
   .option('--delay <number>', 'delay in ms', 3000);
 program.parse(process.argv);
+
+let SOCKET_ENDPOINT = `ws://${program.host}:${program.port}`;
+
+console.log('before', SOCKET_ENDPOINT);
+socket = io.connect(SOCKET_ENDPOINT);
 
 let num_trial = parseInt(program.num_trials);
 let msg_size = parseInt(program.msg_size);
